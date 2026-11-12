@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#244d3e">
+  <meta name="description" content="A shared coursework tracker for tests, assignments and exams across five subjects.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <title>Studyboard · Coursework tracker</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./config.js" defer></script>
+  <script src="./data.js" defer></script>
+  <script src="./core.js" defer></script>
+  <script src="./cloud.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to coursework</a>
+  <aside class="sidebar">
+    <a class="brand" href="./" aria-label="Studyboard home"><span class="brand-symbol" aria-hidden="true">s<span>•</span></span><span>studyboard<span class="brand-caption">A LITTLE MORE DONE.</span></span></a>
+    <div class="nav-label">YOUR WORKSPACE</div>
+    <nav id="subject-nav" aria-label="Subjects"></nav>
+    <div class="sidebar-bottom"><div class="workspace-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></div><div><strong id="workspace-name">Coursework tracker</strong><span>5 subjects · 33 assessments</span></div></div>
+  </aside>
+  <div class="page">
+    <header class="topbar"><span class="breadcrumb">Workspace <span>/</span> <strong>Coursework</strong></span><div class="top-actions"><span id="sync-state" class="sync-pill" role="status">Loading…</span><button id="account-button" class="button small secondary" type="button">Sign in</button></div></header>
+    <main id="main" tabindex="-1">
+      <div class="page-heading"><div><p class="eyebrow">THE BIG PICTURE</p><h1>Your coursework.</h1><p class="subtitle">A clear view of what’s done and what’s next.</p></div><button id="export-button" class="button secondary" type="button"><span aria-hidden="true">↓</span> Export backup</button></div>
+      <div id="connection-banner" class="connection-banner" role="status" hidden></div>
+      <section id="summary" class="summary-grid" aria-label="Course progress"></section>
+      <section class="overall-card" aria-labelledby="overall-title"><div class="overall-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10"/></svg></div><div class="overall-copy"><h2 id="overall-title">Overall progress</h2><p id="overall-description">0 of 33 assessments completed</p></div><div class="overall-bar-wrap"><div class="progress-track" id="overall-progress" role="progressbar" aria-label="Overall completion" aria-valuemin="0" aria-valuemax="33" aria-valuenow="0"><span id="overall-bar"></span></div><span id="overall-percent">0%</span></div></section>
+      <section class="course-section" aria-labelledby="list-title">
+        <div class="list-heading"><div><h2 id="list-title">All subjects</h2><p id="list-subtitle">Your assessments, organised by subject.</p></div><span id="visible-count" class="muted"></span></div>
+        <div class="toolbar"><div id="status-filters" class="filter-tabs" role="group" aria-label="Filter by assessment status"><button type="button" data-filter="all" class="active" aria-pressed="true">All</button><button type="button" data-filter="not_started" aria-pressed="false">To do</button><button type="button" data-filter="in_progress" aria-pressed="false">In progress</button><button type="button" data-filter="completed" aria-pressed="false">Completed</button></div><label class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Find an assessment or topic" aria-label="Search assessments and topics"></label></div>
+        <div id="subject-grid" class="subject-grid"></div>
+        <div id="empty-state" class="empty-state" hidden><span aria-hidden="true">✓</span><h3 id="empty-title">Nothing here just yet</h3><p id="empty-description">Try another filter or search.</p><button id="clear-filters" class="button secondary" type="button">Clear filters</button></div>
+      </section>
+      <footer class="page-footer"><span>Small steps. Visible progress.</span><button id="import-button" type="button" class="footer-button">Restore a backup</button><input id="import-file" type="file" accept="application/json,.json" hidden><span id="footer-mode">Preview · saved on this device</span></footer>
+    </main>
+  </div>
+  <dialog id="task-dialog" class="task-dialog" aria-labelledby="task-dialog-title"><div id="task-dialog-content"></div></dialog>
+  <dialog id="account-dialog" class="account-dialog" aria-labelledby="account-title"><form id="login-form"><div class="dialog-top"><span class="eyebrow">SHARED WORKSPACE</span><button type="button" class="icon-button close-dialog" aria-label="Close sign-in">×</button></div><h2 id="account-title">Pick up where you left off.</h2><p class="muted" id="login-description">Sign in to see and update the same progress as your tutor or student.</p><label class="field" id="login-email-field">Email<input id="login-email" type="email" autocomplete="username" required></label><label class="field"><span id="login-password-label">Password</span><input id="login-password" type="password" autocomplete="current-password" required minlength="6"></label><p id="login-error" class="error-text" role="alert"></p><button id="login-submit" class="button primary full" type="submit">Sign in</button><p class="login-help" id="login-help">Use the account your tutor set up for you.</p></form><div id="signed-in-panel" hidden><div class="dialog-top"><span class="eyebrow">SHARED WORKSPACE</span><button type="button" class="icon-button close-dialog" aria-label="Close account details">×</button></div><h2 id="access-panel-title">You’re signed in.</h2><p id="account-email" class="muted"></p><p class="account-note" id="access-panel-note">Both accounts update the same coursework. Changes normally appear within 10 seconds while this page is open.</p><button id="copy-link-button" class="button primary full" type="button" hidden>Copy private workspace link</button><input id="workspace-link" class="link-output" aria-label="Private workspace link" readonly hidden><button id="refresh-button" class="button secondary full" type="button">Refresh shared progress</button><button id="logout-button" class="button text-button full" type="button">Sign out on this device</button></div></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <dialog id="restore-dialog" class="account-dialog" aria-labelledby="restore-title"><div class="dialog-top"><span class="eyebrow">RESTORE BACKUP</span><button type="button" class="icon-button close-dialog" aria-label="Cancel restore">×</button></div><h2 id="restore-title">Replace current progress?</h2><p class="account-note">This will replace statuses, marks, dates, notes and topic checklists for all 33 assessments. Export your current progress first if you want to keep a copy.</p><p id="restore-error" class="error-text" role="alert"></p><button id="confirm-restore" type="button" class="button primary full">Restore this backup</button></dialog>
+</body>
+</html>
